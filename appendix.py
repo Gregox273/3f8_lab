@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 X = np.loadtxt('X.txt')
 y = np.loadtxt('y.txt')
 
+
 ##
 # X: 2d array with the input features
 # y: 1d array with the class labels (0 or 1)
@@ -75,7 +76,7 @@ def plot_ll(ll):
 # (uses parameter vector w which is defined outside the function's scope)
 #
 
-def predict_for_plot(x, w):
+def predict_for_plot(x,w):
     x_tilde = np.concatenate((x, np.ones((x.shape[ 0 ], 1 ))), 1)
     return logistic(np.dot(x_tilde, w))
 
@@ -92,6 +93,7 @@ def plot_predictive_distribution(X, y, w, predict):
                                 yy.ravel().reshape((-1, 1))), 1)
     Z = predict(X_predict,w)
     Z = Z.reshape(xx.shape)
+
     cs2 = ax.contour(xx, yy, Z, cmap = 'RdBu', linewidths = 2)
     plt.clabel(cs2, fmt = '%2.1f', colors = 'k', fontsize = 14)
     plt.show()
