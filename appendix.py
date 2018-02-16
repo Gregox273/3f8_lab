@@ -75,7 +75,7 @@ def plot_ll(ll):
 # (uses parameter vector w which is defined outside the function's scope)
 #
 
-def predict_for_plot(x):
+def predict_for_plot(x, w):
     x_tilde = np.concatenate((x, np.ones((x.shape[ 0 ], 1 ))), 1)
     return logistic(np.dot(x_tilde, w))
 
@@ -85,12 +85,12 @@ def predict_for_plot(x):
 # predict: function that recives as input a feature matrix and returns a 1d
 #          vector with the probability of class 1.
 
-def plot_predictive_distribution(X, y, predict):
+def plot_predictive_distribution(X, y, w, predict):
     xx, yy = plot_data_internal(X, y)
     ax = plt.gca()
     X_predict = np.concatenate((xx.ravel().reshape((-1, 1)),
                                 yy.ravel().reshape((-1, 1))), 1)
-    Z = predict(X_predict)
+    Z = predict(X_predict,w)
     Z = Z.reshape(xx.shape)
     cs2 = ax.contour(xx, yy, Z, cmap = 'RdBu', linewidths = 2)
     plt.clabel(cs2, fmt = '%2.1f', colors = 'k', fontsize = 14)
