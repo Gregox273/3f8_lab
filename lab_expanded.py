@@ -90,3 +90,23 @@ print confusion
 
 ### Visualise the predictions by adding probability contours to the plots made in part (c) ###
 plot_predictive_distribution(X, y, w, predict_for_plot)
+
+
+### Expand X ###
+X_expand = expand_inputs(0.01, X, X_train)
+X_train_expand = expand_inputs(0.01, X_train, X_train)
+X_test_expand = expand_inputs(0.01, X_test, X_train)
+XX_expand = np.insert(X_expand,0,1,axis=1)
+XX_train_expand = np.insert(X_train_expand,0,1,axis=1)
+XX_test_expand = np.insert(X_test_expand,0,1,axis=1)
+
+### Train model on expanded inputs
+beta_expand = np.zeros(y_train.size + 1)
+l_rate = 0.001
+iterations = 9999
+ll_train = []
+ll_test = []
+
+beta_expand = train(iterations, l_rate, ll_train, ll_test, XX_train_expand, y_train,
+                    XX_test_expand, y_test, beta_expand)
+w = np.roll(beta_expand,-1)
