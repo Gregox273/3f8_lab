@@ -64,3 +64,5 @@ plot_predictive_distribution(X, y, beta, predict_for_plot)
 
 
 # Report the final training and test log-likelihoods per datapoint
+print "Final training ll = %f" %(ll_train[-1])
+print "Final test ll = %f" %(ll_test[-1])
