@@ -46,25 +46,45 @@ y_test = y[test_data]
 X_test = X[test_data,:]
 XX_test = XX[test_data,:]
 
+### Expand X ###
+# First choose an l and corresponding l_rate (empirically determined to avoid overshoot)
+# l = 0.01
+# l_rate = 0.005  # Learning rate, depends on l
+
+# l = 0.1
+# l_rate = 0.0002
+
+l = 1
+l_rate = 0.0005
+
+X_train_expand = expand_inputs(l, X_train, X_train)
+X_expand = expand_inputs(l, X, X_train)
+X_test_expand = expand_inputs(l, X_test, X_train)
+XX_expand = np.insert(X_expand,0,1,axis=1)
+XX_train_expand = np.insert(X_train_expand,0,1,axis=1)
+XX_test_expand = np.insert(X_test_expand,0,1,axis=1)
+
+
+
 ### Implement gradient ascent ###
-beta = np.zeros(D+1)
-l_rate = 0.001  # Learning rate
+beta = np.zeros(y_train.size + 1)
 iterations = 9999
 ll_train = []  # Temporary placeholders
 ll_test = []
 
-beta = train(iterations, l_rate, ll_train, ll_test, XX_train, y_train, XX_test, y_test, beta)
+beta = train(iterations, l_rate, ll_train, ll_test, XX_train_expand, y_train, XX_test_expand, y_test, beta)
 
 # Define global for appendix functions
 w = np.roll(beta,-1)  # due to way x_tilde is defined in appendix
-print "Beta = " + np.array2string(beta)
+#print w
+#print "Beta = " + np.array2string(beta)
 
 ### Report the final training and test log-likelihoods per datapoint ###
 print "Final training ll = %f" %(ll_train[-1])
 print "Final test ll = %f" %(ll_test[-1])
 
 ### Make predictions based on beta ###
-class_2_mask = logistic(np.dot(XX_test, beta)) > 0.5  # p(y_n = 1 | x_tilde_n)
+class_2_mask = logistic(np.dot(XX_test_expand, beta)) > 0.5  # p(y_n = 1 | x_tilde_n)
 y_predict = np.zeros(N_test)
 y_predict[class_2_mask] = 1
 
@@ -85,28 +105,10 @@ print confusion
 
 ### Report training curves showing log likelihood on training and test datasets
 #     per datapoint (averaged) as the optimisation proceeds ###
-#plot_ll(np.array(ll_train))
-#plot_ll(np.array(ll_test))
+plot_ll(np.array(ll_train))
+plot_ll(np.array(ll_test))
 
 ### Visualise the predictions by adding probability contours to the plots made in part (c) ###
-plot_predictive_distribution(X, y, w, predict_for_plot)
+plot_predictive_distribution_expanded(l, X_test, X_train, y_test, w, predict_for_plot_expanded_features)
 
 
-### Expand X ###
-X_expand = expand_inputs(0.01, X, X_train)
-X_train_expand = expand_inputs(0.01, X_train, X_train)
-X_test_expand = expand_inputs(0.01, X_test, X_train)
-XX_expand = np.insert(X_expand,0,1,axis=1)
-XX_train_expand = np.insert(X_train_expand,0,1,axis=1)
-XX_test_expand = np.insert(X_test_expand,0,1,axis=1)
-
-### Train model on expanded inputs
-beta_expand = np.zeros(y_train.size + 1)
-l_rate = 0.001
-iterations = 9999
-ll_train = []
-ll_test = []
-
-beta_expand = train(iterations, l_rate, ll_train, ll_test, XX_train_expand, y_train,
-                    XX_test_expand, y_test, beta_expand)
-w = np.roll(beta_expand,-1)

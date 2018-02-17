@@ -98,6 +98,18 @@ def plot_predictive_distribution(X, y, w, predict):
     plt.clabel(cs2, fmt = '%2.1f', colors = 'k', fontsize = 14)
     plt.show()
 
+def plot_predictive_distribution_expanded(l, X, X_2, y, w, predict):
+    xx, yy = plot_data_internal(X, y)
+    ax = plt.gca()
+    X_predict = np.concatenate((xx.ravel().reshape((-1, 1)),
+                                yy.ravel().reshape((-1, 1))), 1)
+    Z = predict(l, X_predict, X_2, w)
+    Z = Z.reshape(xx.shape)
+
+    cs2 = ax.contour(xx, yy, Z, cmap = 'RdBu', linewidths = 2)
+    plt.clabel(cs2, fmt = '%2.1f', colors = 'k', fontsize = 14)
+    plt.show()
+
 ##
 # l: hyper-parameter for the width of the Gaussian basis functions
 # Z: location of the Gaussian basis functions
@@ -109,6 +121,7 @@ def expand_inputs(l, X, Z):
     ones_Z = np.ones(Z.shape[ 0 ])
     ones_X = np.ones(X.shape[ 0 ])
     r2 = np.outer(X2, ones_Z) - 2 * np.dot(X, Z.T) + np.outer(ones_X, Z2)
+    #print(np.exp(-0.5 / l**2 * r2))
     return np.exp(-0.5 / l**2 * r2)
 
 ##
@@ -120,7 +133,7 @@ def expand_inputs(l, X, Z):
 # scope)
 #
 
-def predict_for_plot_expanded_features(x):
+def predict_for_plot_expanded_features(l, x, X,w):
     x_expanded = expand_inputs(l, x, X)
     x_tilde = np.concatenate((x_expanded, np.ones((x_expanded.shape[ 0 ], 1 ))), 1)
     return logistic(np.dot(x_tilde, w))
