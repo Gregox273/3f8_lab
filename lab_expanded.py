@@ -1,4 +1,5 @@
 import numpy as np
+import sys
 from appendix import *
 
 ### Constants ###
@@ -8,6 +9,13 @@ y = np.loadtxt('y.txt')
 XX = np.insert(X,0,1,axis=1)  # Append column of ones as beta[0] coeffs
 N = y.size  # 1000
 D = 2
+
+# Check Arguments
+if len(sys.argv) != 2:
+    print "Enter mode 0,1 or 2 as argument"
+    sys.exit(1)
+
+mode = int(sys.argv[1])
 
 def dL_db(b,y,X):
 
@@ -48,14 +56,17 @@ XX_test = XX[test_data,:]
 
 ### Expand X ###
 # First choose an l and corresponding l_rate (empirically determined to avoid overshoot)
-# l = 0.01
-# l_rate = 0.005  # Learning rate, depends on l
+if mode == 0:
+	l = 0.01
+	l_rate = 0.005  # Learning rate, depends on l
 
-# l = 0.1
-# l_rate = 0.0002
+elif mode == 1:
+	l = 0.1
+	l_rate = 0.0002
 
-l = 1
-l_rate = 0.0005
+else:
+	l = 1
+	l_rate = 0.0002
 
 X_train_expand = expand_inputs(l, X_train, X_train)
 X_expand = expand_inputs(l, X, X_train)
