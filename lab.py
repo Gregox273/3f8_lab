@@ -4,7 +4,7 @@ from appendix import *
 ### Constants ###
 X = np.loadtxt('X.txt')
 y = np.loadtxt('y.txt')
-#plot_data(X,y)
+plot_data(X,y)
 XX = np.insert(X,0,1,axis=1)  # Append column of ones as beta[0] coeffs
 N = y.size  # 1000
 D = 2
@@ -49,7 +49,7 @@ XX_test = XX[test_data,:]
 ### Implement gradient ascent ###
 beta = np.zeros(D+1)
 l_rate = 0.001  # Learning rate
-iterations = 9999
+iterations = 200
 ll_train = []  # Temporary placeholders
 ll_test = []
 
@@ -85,8 +85,8 @@ print confusion
 
 ### Report training curves showing log likelihood on training and test datasets
 #     per datapoint (averaged) as the optimisation proceeds ###
-#plot_ll(np.array(ll_train))
-#plot_ll(np.array(ll_test))
+plot_ll(np.array(ll_train))
+plot_ll(np.array(ll_test))
 
 ### Visualise the predictions by adding probability contours to the plots made in part (c) ###
-plot_predictive_distribution(X, y, w, predict_for_plot)
+plot_predictive_distribution(X_test, y_predict, w, predict_for_plot)

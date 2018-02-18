@@ -120,6 +120,6 @@ plot_ll(np.array(ll_train))
 plot_ll(np.array(ll_test))
 
 ### Visualise the predictions by adding probability contours to the plots made in part (c) ###
-plot_predictive_distribution_expanded(l, X_test, X_train, y_test, w, predict_for_plot_expanded_features)
+plot_predictive_distribution_expanded(l, X_test, X_train, y_predict, w, predict_for_plot_expanded_features)
 
 
